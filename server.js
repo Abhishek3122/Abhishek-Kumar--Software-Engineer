@@ -9,6 +9,8 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+// parse application/x-www-form-urlencoded (HTML form submits)
+app.use(express.urlencoded({ extended: true }));
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
@@ -79,6 +81,8 @@ app.get("/api/incidents/:id", async (req, res) => {
 
 // POST /api/incidents - create new incident
 app.post("/api/incidents", async (req, res) => {
+  console.log('POST /api/incidents headers:', req.headers['content-type']);
+  console.log('POST /api/incidents body:', req.body);
   try {
     const { title, service, severity, status, owner, summary } = req.body;
     const newIncident = await Incident.create({ title, service, severity, status, owner, summary });
