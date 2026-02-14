@@ -100,18 +100,6 @@ app.patch("/api/incidents/:id", async (req, res) => {
   }
 });
 
-// PUT /api/incidents/:id - update incident (full replacement)
-app.put("/api/incidents/:id", async (req, res) => {
-  try {
-    const updateData = req.body;
-    const updatedIncident = await Incident.findByIdAndUpdate(req.params.id, updateData, { new: true });
-    if (!updatedIncident) return res.status(404).json({ error: "Incident not found" });
-    res.json(updatedIncident);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
-
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
