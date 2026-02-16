@@ -47,7 +47,15 @@ app.get("/api/incidents", async (req, res) => {
       filter.title = { $regex: search, $options: "i" };
     }
     if (status) filter.status = status;
-    if (severity) filter.severity = severity;
+
+    // support multiple severity query params: ?severity=SEV1&severity=SEV2
+    if (severity) {
+      if (Array.isArray(severity)) {
+        filter.severity = { $in: severity };
+      } else {
+        filter.severity = severity;
+      }
+    }
     if (service) filter.service = service;
 
     const total = await Incident.countDocuments(filter);
